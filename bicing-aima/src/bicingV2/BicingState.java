@@ -2,7 +2,6 @@ package bicingV2;
 
 import IA.Bicing.Estaciones;
 import IA.Bicing.Estacion;
-import aima.search.framework.Problem;
 import model.Board;
 import model.Furgoneta;
 import model.Pair;
@@ -18,7 +17,7 @@ public class BicingState {
     // Atributos estaticos del mapa del problema
     private static Estaciones Stations;
     private static ArrayList<Pair> demand_bicis;
-    private static TreeMap<Integer,Integer> exceed_bicis;
+    private static TreeMap<Integer,Integer> sorted_exceed;
     private static int max_furgo;
 
     private Furgoneta[] Furgos;
@@ -33,7 +32,7 @@ public class BicingState {
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
-        exceed_bicis= new TreeMap<>();  // key -> disponible || value ->  origin index
+        sorted_exceed = new TreeMap<>();  // key -> disponible || value ->  origin index
 
         Pair P;
         for (int i = 0; i < Stations.size(); ++i) {
@@ -47,28 +46,28 @@ public class BicingState {
                 P = new Pair(i, dem-next);
                 demand_bicis.add(P);
             }
-            else exceed_bicis.put(Math.min(next - dem, noused),i);
+            else sorted_exceed.put(Math.min(next - dem, noused),i);
 
         }
 
-        Furgos = new Furgoneta[Math.min(num_furgo,exceed_bicis.size())];
+        Furgos = new Furgoneta[Math.min(num_furgo, sorted_exceed.size())];
     }
 
     // SOLUCIONES INICIALES
     public void initialSolution0(){
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
-        int i=0, sz=exceed_bicis.size(), aux,j=0;
+        int i=0, sz= sorted_exceed.size(), aux,j=0;
         aux= sz-max_furgo;
 
-        for(Map.Entry<Integer,Integer> entry : exceed_bicis.entrySet()) {
+        for(Map.Entry<Integer,Integer> entry : sorted_exceed.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
 
-            if(max_furgo < sz)
-                if(i >= aux) Furgos[j++]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
-            else
-                Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+            if(max_furgo < sz) {
+                if (i >= aux) Furgos[j++] = new Furgoneta(value, -1, -1, Math.min(key, 30), 0, 0);
+            }
+            else Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
 
             ++i;
         }
@@ -160,7 +159,7 @@ public class BicingState {
     // GETTERS
     public Furgoneta[] getFurgos() { return Furgos; }
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
-    public static TreeMap<Integer,Integer> getExceed_Bicis() { return exceed_bicis;}
+    public static TreeMap<Integer,Integer> getExceed_Bicis() { return sorted_exceed;}
     public static Estaciones getStations() {
         return Stations;
     }
