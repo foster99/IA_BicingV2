@@ -15,10 +15,13 @@ public class BicingState {
     private static Estaciones Stations;
     private static ArrayList<Pair> demand_bicis;
     private static ArrayList<Pair> exceed_bicis;
+    private static int max_furgo;
 
     private Furgoneta[] Furgos;
 
     public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo) {
+
+        max_furgo = num_furgo;
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
