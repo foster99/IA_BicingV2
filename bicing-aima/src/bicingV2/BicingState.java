@@ -144,6 +144,7 @@ public class BicingState {
         return ret.toString();
     }
 
+    // GETTERS
     public Furgoneta[] getFurgos() { return Furgos; }
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
     public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
