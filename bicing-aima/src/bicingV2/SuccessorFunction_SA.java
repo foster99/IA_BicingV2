@@ -13,7 +13,7 @@ public class SuccessorFunction_SA implements SuccessorFunction {
     public List getSuccessors(Object state) {
         ArrayList<Successor> retVal = new ArrayList<>();
         BicingState b_state = (BicingState) state;
-
+/*
         Furgoneta[] OldFurgos = b_state.getFurgos();
         final ArrayList<Pair> Exceed_Bicis = BicingState.getExceed_Bicis();
         final ArrayList<Pair> Demand_Bicis = BicingState.getDemand_Bicis();
@@ -42,7 +42,7 @@ public class SuccessorFunction_SA implements SuccessorFunction {
         // Anade el array al conjunto de sucesores.
         BicingState succ = new BicingState(NewFurgos);
         retVal.add(new Successor(result, succ));
-
+*/
         return retVal;
     }
 }

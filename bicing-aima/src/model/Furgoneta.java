@@ -20,6 +20,11 @@ public class Furgoneta {
         this.qtt2 = qtt2;
     }
 
+    public void off() {
+        d1 = d2 = -1;
+        qtt1 = qtt2 = 0;
+    }
+
     public int getTotal(){
         return qtt1+qtt2;
     }
@@ -109,5 +114,6 @@ public class Furgoneta {
         }
         return null;
     }
+
 
 }

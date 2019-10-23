@@ -22,6 +22,10 @@ public class BicingState {
 
     private Furgoneta[] Furgos;
 
+    public BicingState(Furgoneta[] NewFurgos) {
+        Furgos = NewFurgos;
+    }
+
     public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo) {
 
         max_furgo = num_furgo;
@@ -70,60 +74,34 @@ public class BicingState {
             ++i;
         }
     }
-    public void initialSolution1() {
-        TreeMap = new TreeMap();
-
-
-    }
+    public void initialSolution1() {}
     public void initialSolution2() {}
 
     // EVALUACION DEL ESTADO
-    public double computeBenefits() {
+    double computeBenefits() {
 
         double Benefits = 0;
-        Furgoneta[] Furgos = this.getFurgos();
-        Estaciones Stations = BicingState.getStations(); // acceso a partir de clase porque es un elemento estatico
-
-        int[] Estaciones = new int[Stations.size()];
-
-        // Suma de las bicis que me puedo llevar
-        for (Pair exceed : exceed_bicis) {
-            Estaciones[exceed.first] = exceed.second;
-        }
-
+        int[] demandas = new int[Stations.size()];
 
         // Dinero gastado en transporte de bicis
         for (Furgoneta furgo : Furgos) {
 
-            if (!furgo.hasOrigin()) continue;
+            if (!furgo.hasOrigin() && furgo.hasD1()) continue;
 
-            Benefits -= furgo.costeRecorrido();         // Restamos coste por movimiento de bicicletas.
+            Benefits -= furgo.costeRecorrido();
 
-            if (furgo.hasD1()) {
-                Estaciones[furgo.origin] -= furgo.qtt1; // Restamos lo que nos llevamos para ver despues si nos pasamos.
-                Estaciones[furgo.d1] += furgo.qtt1;     // Sumamos para ver lo que nos acercamos a la demanda.
-            }
-            if (furgo.hasD2()) {
-                Estaciones[furgo.origin] -= furgo.qtt2;
-                Estaciones[furgo.d2] += furgo.qtt2;
-            }
+            demandas[furgo.d1] += furgo.qtt1;
+
+            if (furgo.hasD2())
+                demandas[furgo.d2] += furgo.qtt2;
         }
 
-        // Sumas el beneficio por acercarte a la demanda
-        for (Pair dem : demand_bicis) {
-            if (Estaciones[dem.first] > 0) {
-                Estacion e = Stations.get(dem.first);
-                Benefits +=  Math.min(e.getDemanda()-e.getNumBicicletasNext(), Estaciones[dem.first]);
-            }
-        }
-
-        // Restas beneficio que corresponde a las bicis que has quitado de mas de donde sobran (no probable)
-        for (Pair exceed : exceed_bicis) {
-            if (Estaciones[exceed.first] < 0) Benefits += Estaciones[exceed.first];
-        }
+        for (Pair est : demand_bicis)
+            Benefits += Math.min(demandas[est.first], est.second);
 
         return Benefits;
     }
+
     public double getActive() {
 
         int active = 0;
@@ -132,6 +110,7 @@ public class BicingState {
         }
         return active;
     }
+
     public String AsignacionBicisToString() {
 
         // Hay que programar el printing de las asignaciones de las bicicletas.

@@ -12,25 +12,48 @@ public class SuccessorFunction_HC implements SuccessorFunction {
         ArrayList<Successor> retVal = new ArrayList<>();
         BicingState b_state = (BicingState) state;
 
-        Furgoneta[] Furgos = b_state.getFurgos();
-        final ArrayList<Pair> Exceed_Bicis = BicingState.getExceed_Bicis();
-        final ArrayList<Pair> Demand_Bicis = BicingState.getDemand_Bicis();
+        Furgoneta[] OldFurgos = b_state.getFurgos();
 
-        // Si no tiene origen
-        //BicingOperatorHC.changeOriginFull(Furgos, retVal, Exceed_Bicis, Demand_Bicis);
-        BicingOperatorHC.changeOrigin(Furgos, retVal, Exceed_Bicis);
+        for (int f = 0; f < OldFurgos.length; f++) {
 
-        // Cuando le falta un destino
-        BicingOperatorHC.fill_SinDest(Furgos, retVal, Demand_Bicis, 1);
-        BicingOperatorHC.fill_SinDest(Furgos, retVal, Demand_Bicis, 2);
-        BicingOperatorHC.swap_anyway(Furgos, retVal, Demand_Bicis);
+            for (int dest = 0; dest < BicingState.getDemand_Bicis().size(); dest++) {
 
-        // add/remove
-        BicingOperatorHC.add_Bici_ConDest(Furgos, retVal, 1, Exceed_Bicis);
-        BicingOperatorHC.add_Bici_ConDest(Furgos, retVal, 2, Exceed_Bicis);
-        BicingOperatorHC.remove_Bici(Furgos, retVal, 1);
-        BicingOperatorHC.remove_Bici(Furgos, retVal, 2);
-        //Operator.swap_Dest(Furgos, retVal);
+                // fullD1
+                if (!OldFurgos[f].hasD1()) {
+                    Furgoneta[] NewFurgos1 = new Furgoneta[OldFurgos.length];
+                    for (int i = 0; i < OldFurgos.length; i++) NewFurgos1[i] = OldFurgos[i].clone();
+                    String result1 = Operator_HC.fullD1(NewFurgos1[f], dest);
+                    BicingState succ1 = new BicingState(NewFurgos1);
+                    retVal.add(new Successor(result1, succ1));
+                }
+
+                // fullD2
+                else if (!OldFurgos[f].hasD2()) {
+                    Furgoneta[] NewFurgos2 = new Furgoneta[OldFurgos.length];
+                    for (int i = 0; i < OldFurgos.length; i++) NewFurgos2[i] = OldFurgos[i].clone();
+                    String result2 = Operator_HC.fullD2(NewFurgos2[f], dest);
+                    BicingState succ2 = new BicingState(NewFurgos2);
+                    retVal.add(new Successor(result2, succ2));
+                }
+            }
+
+            // removeD1
+            if (OldFurgos[f].hasD1()) {
+                Furgoneta[] NewFurgos3 = new Furgoneta[OldFurgos.length];
+                for (int i = 0; i < OldFurgos.length; i++) NewFurgos3[i] = OldFurgos[i].clone();
+                String result3 = Operator_HC.removeD1(NewFurgos3[f]);
+                BicingState succ3 = new BicingState(NewFurgos3);
+                retVal.add(new Successor(result3, succ3));
+            }
+            // removeD2
+            if (OldFurgos[f].hasD2()) {
+                Furgoneta[] NewFurgos4 = new Furgoneta[OldFurgos.length];
+                for (int i = 0; i < OldFurgos.length; i++) NewFurgos4[i] = OldFurgos[i].clone();
+                String result = Operator_HC.removeD2(NewFurgos4[f]);
+                BicingState succ4 = new BicingState(NewFurgos4);
+                retVal.add(new Successor(result, succ4));
+            }
+        }
 
         return retVal;
     }
