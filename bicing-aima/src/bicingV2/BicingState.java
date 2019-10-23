@@ -65,12 +65,10 @@ public class BicingState {
             Integer value = entry.getValue();
 
             if(max_furgo < sz){
-                if(i >= aux){
+                if(i >= aux)
                     Furgos[j++]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
-                }
             }
             else Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
-
             ++i;
         }
     }
