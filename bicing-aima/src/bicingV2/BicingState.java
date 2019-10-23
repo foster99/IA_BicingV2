@@ -9,6 +9,7 @@ import model.Pair;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class BicingState {
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
-        exceed_bicis= new TreeMap<>();  // first -> id || second ->  bicis que sobran
+        exceed_bicis= new TreeMap<>();  // key -> disponible || value ->  origin index
 
         Pair P;
         for (int i = 0; i < Stations.size(); ++i) {
@@ -64,16 +65,29 @@ public class BicingState {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
 
-            if(max_furgo < sz){
-                if(i >= aux)
-                    Furgos[j++]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
-            }
-            else Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+            if(max_furgo < sz)
+                if(i >= aux) Furgos[j++]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+            else
+                Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+
             ++i;
         }
     }
-    public void initialSolution1() {}
-    public void initialSolution2() {}
+    public void initialSolution1() {
+
+
+    }
+    public void initialSolution2() {
+        // ASIGNACION RANDOM
+        Random rand = new Random();
+        int origin, qtt0;
+        boolean[] used = new boolean[max_furgo];
+        for (int i = 0; i < max_furgo; i++) {
+            do origin = rand.nextInt(max_furgo); while(!used[origin]);
+            qtt0 = Math.min(Stations.get(origin).getNumBicicletasNext() - Stations.get(origin).getDemanda(), Stations.get(origin).getNumBicicletasNoUsadas());
+            Furgos[i] = new Furgoneta(origin,-1,-1, qtt0,0,0);
+        }
+    }
 
     // EVALUACION DEL ESTADO
     double computeBenefits() {
