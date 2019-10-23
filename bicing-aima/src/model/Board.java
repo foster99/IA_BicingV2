@@ -99,7 +99,7 @@ public class Board {
 
     }
 
-    private static void Bicing_HillClimbing(BicingState state, int heuristic) {
+    private static void Bicing_HillClimbing(BicingState state) {
         try {
 
             tick = System.currentTimeMillis();
