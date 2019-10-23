@@ -4,7 +4,7 @@ import IA.Bicing.Estacion;
 import bicingV2.BicingState;
 
 public class Furgoneta {
-    public int origin;
+    private int origin;
     public int d1;
     public int d2;
     public int qtt0;
@@ -26,7 +26,7 @@ public class Furgoneta {
     }
 
     public boolean isActive(){return hasD1() && hasOrigin();}
-    public int getTotal(){
+    private int getTotal(){
         return qtt1+qtt2;
     }
     public boolean full() {

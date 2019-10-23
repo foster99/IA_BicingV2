@@ -3,7 +3,8 @@ package bicingV2;
 import model.Furgoneta;
 import model.Pair;
 
-public class Operator_HC {
+@SuppressWarnings("ALL")
+class Operator_HC {
     static String fullD1(Furgoneta F, int dest) {
         // Operador que a una furgoneta con origen definido, le asigna un D1 con todas las bicicletas posibles.
         Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda

@@ -2,7 +2,7 @@ package bicingV2;
 
 import aima.search.framework.HeuristicFunction;
 
-public class HeuristicFunction_SA implements HeuristicFunction {
+class HeuristicFunction_SA implements HeuristicFunction {
     @Override
     public double getHeuristicValue(Object state) {
         BicingState b_state = (BicingState) state;

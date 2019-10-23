@@ -5,7 +5,7 @@ import model.Pair;
 
 import java.util.Random;
 
-public class Operator_SA {
+class Operator_SA {
 
    static String fullD1(Furgoneta[] NewFurgos, int f, int dest) {
        // Operador que a una furgoneta con origen definido, le asigna un D1 con todas las bicicletas posibles.
