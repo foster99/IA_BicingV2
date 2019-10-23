@@ -16,7 +16,7 @@ public class BicingState {
     private static ArrayList<Pair> demand_bicis;
     private static ArrayList<Pair> exceed_bicis;
 
-    private final Furgoneta[] Furgos;
+    private Furgoneta[] Furgos;
 
     public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo) {
         Stations = new Estaciones(nest, nbic, demanda, seed);
@@ -61,9 +61,6 @@ public class BicingState {
         double Benefits = 0;
         Furgoneta[] Furgos = this.getFurgos();
         Estaciones Stations = BicingState.getStations(); // acceso a partir de clase porque es un elemento estatico
-        ArrayList<Pair> demand_bicis = BicingState.getDemand_Bicis();
-        ArrayList<Pair> exceed_bicis = BicingState.getExceed_Bicis();
-
 
         int[] Estaciones = new int[Stations.size()];
 
@@ -147,6 +144,9 @@ public class BicingState {
         return ret.toString();
     }
 
+    public Furgoneta[] getFurgos() { return Furgos; }
+    public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
+    public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() {
         return Stations;
     }

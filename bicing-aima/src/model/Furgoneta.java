@@ -4,12 +4,12 @@ import IA.Bicing.Estacion;
 import bicingV2.BicingState;
 
 public class Furgoneta {
-    int origin;
-    int d1;
-    int d2;
-    int qtt0;
-    int qtt1;
-    int qtt2;
+    public int origin;
+    public int d1;
+    public int d2;
+    public int qtt0;
+    public int qtt1;
+    public int qtt2;
 
     public Furgoneta(int origin, int d1, int d2, int qtt1, int qtt2) {
         this.origin = origin;
