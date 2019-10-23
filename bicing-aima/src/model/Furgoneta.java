@@ -25,6 +25,7 @@ public class Furgoneta {
         qtt1 = qtt2 = 0;
     }
 
+    public boolean isActive(){return hasD1() && hasOrigin();}
     public int getTotal(){
         return qtt1+qtt2;
     }

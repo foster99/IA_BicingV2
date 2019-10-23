@@ -58,7 +58,7 @@ public class BicingState {
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
         int i=0, sz=exceed_bicis.size(), aux,j=0;
-        aux= sz-max_furgo -1;
+        aux= sz-max_furgo;
 
         for(Map.Entry<Integer,Integer> entry : exceed_bicis.entrySet()) {
             Integer key = entry.getKey();
@@ -86,7 +86,7 @@ public class BicingState {
         // Dinero gastado en transporte de bicis
         for (Furgoneta furgo : Furgos) {
 
-            if (!furgo.hasOrigin() && furgo.hasD1()) continue;
+            if (!furgo.hasOrigin() || !furgo.hasD1()) continue;
 
             Benefits -= furgo.costeRecorrido();
 
@@ -106,7 +106,7 @@ public class BicingState {
 
         int active = 0;
         for (Furgoneta furgo : Furgos) {
-            if (furgo.hasOrigin()) active++;
+            if (furgo.isActive()) active++;
         }
         return active;
     }
@@ -151,5 +151,8 @@ public class BicingState {
     public static TreeMap<Integer,Integer> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() {
         return Stations;
+    }
+    public static int getMax_furgo() {
+        return max_furgo;
     }
 }
