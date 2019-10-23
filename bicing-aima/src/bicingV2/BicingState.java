@@ -7,14 +7,17 @@ import model.Board;
 import model.Furgoneta;
 import model.Pair;
 
+
 import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.Map;
 
 public class BicingState {
 
     // Atributos estaticos del mapa del problema
     private static Estaciones Stations;
     private static ArrayList<Pair> demand_bicis;
-    private static ArrayList<Pair> exceed_bicis;
+    private static TreeMap<Integer,Integer> exceed_bicis;
     private static int max_furgo;
 
     private Furgoneta[] Furgos;
@@ -25,7 +28,7 @@ public class BicingState {
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
-        exceed_bicis  = new ArrayList<>();  // first -> id || second ->  bicis que sobran
+        exceed_bicis= new TreeMap<>();  // first -> id || second ->  bicis que sobran
 
         Pair P;
         for (int i = 0; i < Stations.size(); ++i) {
@@ -39,23 +42,39 @@ public class BicingState {
                 P = new Pair(i, dem-next);
                 demand_bicis.add(P);
             }
-            else { // solo me puedo llevar de lo que hay (lo no usado)
-                P = new Pair(i, Math.min(next - dem, noused));
-                exceed_bicis.add(P);
-            }
+            else exceed_bicis.put(Math.min(next - dem, noused),i);
+
         }
 
         Furgos = new Furgoneta[Math.min(num_furgo,exceed_bicis.size())];
-        for (int i = 0; i < Furgos.length; i++)
-            Furgos[i] = new Furgoneta(-1, -1, -1, 0, 0);
     }
 
     // SOLUCIONES INICIALES
-    public void initialSolution0() {
+    public void initialSolution0(){
+        //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
-        // No hace nada. Todas las furgonetas estan inactivas.
+        int i=0, sz=exceed_bicis.size(), aux,j=0;
+        aux= sz-max_furgo -1;
+
+        for(Map.Entry<Integer,Integer> entry : exceed_bicis.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+
+            if(max_furgo < sz){
+                if(i >= aux){
+                    Furgos[j++]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+                }
+            }
+            else Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+
+            ++i;
+        }
     }
-    public void initialSolution1() {}
+    public void initialSolution1() {
+        TreeMap = new TreeMap();
+
+
+    }
     public void initialSolution2() {}
 
     // EVALUACION DEL ESTADO
@@ -150,7 +169,7 @@ public class BicingState {
     // GETTERS
     public Furgoneta[] getFurgos() { return Furgos; }
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
-    public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
+    public static TreeMap<Integer,Integer> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() {
         return Stations;
     }

@@ -11,10 +11,11 @@ public class Furgoneta {
     public int qtt1;
     public int qtt2;
 
-    public Furgoneta(int origin, int d1, int d2, int qtt1, int qtt2) {
+    public Furgoneta(int origin, int d1, int d2, int qtt0,int qtt1, int qtt2) {
         this.origin = origin;
         this.d1 = d1;
         this.d2 = d2;
+        this.qtt0= qtt0;
         this.qtt1 = qtt1;
         this.qtt2 = qtt2;
     }
@@ -32,22 +33,6 @@ public class Furgoneta {
         return  d2 != -1;
     }
     public boolean hasOrigin() { return origin != -1; }
-
-    void swapDest() {
-        if(!hasD1() && hasD2()){
-            d1 = d2;
-            qtt1 = qtt2;
-            d2 = -1;
-            qtt2 = 0;
-        }
-        else if(hasD1() && hasD2()){
-            int daux = d1, qttaux = qtt1;
-            d1= d2;
-            qtt1=qtt2;
-            d2=daux;
-            qtt2=qttaux;
-        }
-    }
 
     public double totalDistance() {
         if (!this.hasOrigin()) return 0;
@@ -72,7 +57,7 @@ public class Furgoneta {
     }
 
     public Furgoneta clone() {
-        return new Furgoneta(origin, d1, d2, qtt1, qtt2);
+        return new Furgoneta(origin, d1, d2, qtt0,qtt1, qtt2);
     }
     public String toString(boolean linux_tabs) {
 
