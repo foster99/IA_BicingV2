@@ -10,7 +10,7 @@ class Operator {
         Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
 
         F.d1 = destino.first;
-        F.qtt1 = Math.min(destino.second, F.qtt0);
+        F.qtt1 = Math.min(destino.second, BicingState.getExceed_Bicis().get(F.origin));
 
         return "[fullD1]: Destino 1 asignado y lleno en furgoneta.";
     }
@@ -19,7 +19,7 @@ class Operator {
         Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
 
         F.d2 = destino.first;
-        F.qtt2 = F.qtt0 - F.qtt1;
+        F.qtt2 = BicingState.getExceed_Bicis().get(F.origin) - F.qtt1;
 
         return "[fullD2]: Destino 2 asignado y lleno (lo maximo posible) en furgoneta.";
     }

@@ -32,7 +32,7 @@ public class Board {
 
             init_sol = Integer.parseInt(args[5]);
 
-            BicingState initial_state = new BicingState(nest, nbic, dem, seed, f);
+            BicingState initial_state = new BicingState(nest, nbic, dem, seed, f, init_sol);
 
             if (init_sol == 0)
                 initial_state.initialSolution0();
@@ -72,13 +72,13 @@ public class Board {
                 seed = random.nextInt();
             }
 
-            BicingState initial_state = new BicingState(nest, nbic, dem, seed, f);
-
             System.out.println("Tipo de solucion inicial:\n" +
                     "\t- Introduce (0) para utilizar la solucion 0.\n" +
                     "\t- Introduce (1) para utilizar la solucion 1.\n" +
                     "\t- Introduce (2) para utilizar la solucion 2.\n");
             init_sol = in.nextInt();
+
+            BicingState initial_state = new BicingState(nest, nbic, dem, seed, f, init_sol);
 
             if (init_sol == 0)
                 initial_state.initialSolution0();

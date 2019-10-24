@@ -17,7 +17,8 @@ public class BicingState {
     // Atributos estaticos del mapa del problema
     private static Estaciones Stations;
     private static ArrayList<Pair> demand_bicis;
-    private static TreeMap<Integer,Integer> sorted_exceed;
+    private static TreeMap<Integer,Integer> exceed_bicis;
+    private static TreeMap<Double,Integer> sorted_exceed;
     private static int max_furgo;
 
     private Furgoneta[] Furgos;
@@ -26,12 +27,13 @@ public class BicingState {
         Furgos = NewFurgos;
     }
 
-    public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo) {
+    public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo, int init_sol) {
 
         max_furgo = num_furgo;
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
+        exceed_bicis = new TreeMap<>();
         sorted_exceed = new TreeMap<>();  // key -> disponible || value ->  origin index
 
         Pair P;
@@ -46,36 +48,69 @@ public class BicingState {
                 P = new Pair(i, dem-next);
                 demand_bicis.add(P);
             }
-            else sorted_exceed.put(Math.min(next - dem, noused),i);
+            else {
+                int value = Math.min(next - dem, noused);
+                exceed_bicis.put(i, value);
+                if (init_sol == 0) sorted_exceed.put((double) value, i);
+            }
 
         }
-
-        Furgos = new Furgoneta[Math.min(num_furgo, sorted_exceed.size())];
+        Furgos = new Furgoneta[Math.min(num_furgo, exceed_bicis.size())];
     }
 
     // SOLUCIONES INICIALES
     public void initialSolution0(){
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
-        int i=0, sz= sorted_exceed.size(), aux,j=0;
-        aux= sz-max_furgo;
+        int i=0, j = 0, sz = sorted_exceed.size(), aux = sz - max_furgo;
 
-        for(Map.Entry<Integer,Integer> entry : sorted_exceed.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue();
+        for(Map.Entry<Double,Integer> entry : sorted_exceed.entrySet()) {
 
             if(max_furgo < sz) {
-                if (i >= aux) Furgos[j++] = new Furgoneta(value, -1, -1, Math.min(key, 30), 0, 0);
+                if (i >= aux) Furgos[j++] = new Furgoneta(entry.getValue(), -1, -1, 0, 0);
             }
-            else Furgos[i]= new Furgoneta(value, -1,-1, Math.min(key,30),0,0);
+            else Furgos[i]= new Furgoneta(entry.getValue(), -1,-1,0,0);
 
             ++i;
         }
     }
     public void initialSolution1() {
 
+        for(Map.Entry<Integer,Integer> origin : exceed_bicis.entrySet()) {
 
+            double points = 0;
+            int[][] stats = new int[40][2];
+            for (Pair dem : demand_bicis) {
+                int rango = Board.distance(dem.first, origin.getKey())/1000;
+                stats[rango][0]++;
+                stats[rango][1] += dem.second;
+            }
+
+            for (int i = 0; i < stats.length; i++) {
+                int[] range_value = stats[i];
+                if (range_value[0] == 0) continue;
+                points += ((double) range_value[1] / (double) range_value[0])/ Math.log(i+0.5);
+            }
+
+            double value = 0.2;
+            sorted_exceed.put(value*points + (1-value)*points, origin.getKey());
+
+        }//25 1250 5 0 1234 1 0
+
+
+        int i=0, j = 0, sz = sorted_exceed.size(), aux = sz - max_furgo;
+
+        for(Map.Entry<Double,Integer> origin : sorted_exceed.entrySet()) {
+
+            if(max_furgo < sz) {
+                if (i >= aux) Furgos[j++] = new Furgoneta(origin.getValue(), -1, -1, 0, 0);
+            }
+            else Furgos[i]= new Furgoneta(origin.getValue(), -1,-1,0,0);
+
+            ++i;
+        }
     }
+
     public void initialSolution2() {
         // ASIGNACION RANDOM
         Random rand = new Random();
@@ -84,7 +119,7 @@ public class BicingState {
         for (int i = 0; i < max_furgo; i++) {
             do origin = rand.nextInt(max_furgo); while(!used[origin]);
             qtt0 = Math.min(Stations.get(origin).getNumBicicletasNext() - Stations.get(origin).getDemanda(), Stations.get(origin).getNumBicicletasNoUsadas());
-            Furgos[i] = new Furgoneta(origin,-1,-1, qtt0,0,0);
+            Furgos[i] = new Furgoneta(origin,-1,-1,0,0);
         }
     }
 
@@ -159,7 +194,8 @@ public class BicingState {
     // GETTERS
     public Furgoneta[] getFurgos() { return Furgos; }
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
-    public static TreeMap<Integer,Integer> getExceed_Bicis() { return sorted_exceed;}
+    public static TreeMap<Double,Integer> getSorted_exceed() { return sorted_exceed;}
+    public static TreeMap<Integer,Integer> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() {
         return Stations;
     }

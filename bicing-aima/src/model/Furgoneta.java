@@ -4,18 +4,16 @@ import IA.Bicing.Estacion;
 import bicingV2.BicingState;
 
 public class Furgoneta {
-    private int origin;
+    public int origin;
     public int d1;
     public int d2;
-    public int qtt0;
     public int qtt1;
     public int qtt2;
 
-    public Furgoneta(int origin, int d1, int d2, int qtt0,int qtt1, int qtt2) {
+    public Furgoneta(int origin, int d1, int d2, int qtt1, int qtt2) {
         this.origin = origin;
         this.d1 = d1;
         this.d2 = d2;
-        this.qtt0= qtt0;
         this.qtt1 = qtt1;
         this.qtt2 = qtt2;
     }
@@ -63,7 +61,7 @@ public class Furgoneta {
     }
 
     public Furgoneta clone() {
-        return new Furgoneta(origin, d1, d2, qtt0,qtt1, qtt2);
+        return new Furgoneta(origin, d1, d2,qtt1, qtt2);
     }
     public String toString(boolean linux_tabs) {
 
