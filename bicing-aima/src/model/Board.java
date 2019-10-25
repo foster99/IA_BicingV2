@@ -57,7 +57,7 @@ public class Board {
             System.out.println("Introduce el numero de Bicicletas (este debe ser igual o superior a " + (nest * 50) + "):");
             nbic = in.nextInt();
 
-            System.out.println("Introduce el numero de furgonetas:");
+            System.out.println("Introduce el numero de furgonetas (relacion 1:5 = " + nest/5 + "):");
             f = in.nextInt();
 
             System.out.println("Tipo de demanda:\n" +
@@ -73,9 +73,9 @@ public class Board {
             }
 
             System.out.println("Tipo de solucion inicial:\n" +
-                    "\t- Introduce (0) para utilizar la solucion 0.\n" +
-                    "\t- Introduce (1) para utilizar la solucion 1.\n" +
-                    "\t- Introduce (2) para utilizar la solucion 2.\n");
+                    "\t- Introduce (0) para utilizar la solucion que selecciona las estaciones con mas bicis.\n" +
+                    "\t- Introduce (1) para utilizar la solucion que selecciona las estaciones con sistema de puntos.\n" +
+                    "\t- Introduce (2) para utilizar la solucion que selecciona estaciones RANDOM.\n");
             init_sol = in.nextInt();
 
             BicingState initial_state = new BicingState(nest, nbic, dem, seed, f, init_sol);

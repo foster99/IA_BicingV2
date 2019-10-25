@@ -70,7 +70,6 @@ public class BicingState {
                 if (i >= aux) Furgos[j++] = new Furgoneta(entry.getValue(), -1, -1, 0, 0);
             }
             else Furgos[i]= new Furgoneta(entry.getValue(), -1,-1,0,0);
-
             ++i;
         }
     }
@@ -85,6 +84,11 @@ public class BicingState {
                 stats[rango][0]++;
                 stats[rango][1] += dem.second;
             }
+/*
+            for(Map.Entry<Integer,Integer> other_origin : exceed_bicis.entrySet()) {
+                if (origin == other_origin) continue;
+                points -= Board.distance()
+            }*/
 
             for (int i = 0; i < stats.length; i++) {
                 int[] range_value = stats[i];
@@ -114,11 +118,10 @@ public class BicingState {
     public void initialSolution2() {
         // ASIGNACION RANDOM
         Random rand = new Random();
-        int origin, qtt0;
+        int origin;
         boolean[] used = new boolean[max_furgo];
         for (int i = 0; i < max_furgo; i++) {
             do origin = rand.nextInt(max_furgo); while(!used[origin]);
-            qtt0 = Math.min(Stations.get(origin).getNumBicicletasNext() - Stations.get(origin).getDemanda(), Stations.get(origin).getNumBicicletasNoUsadas());
             Furgos[i] = new Furgoneta(origin,-1,-1,0,0);
         }
     }

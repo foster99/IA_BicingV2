@@ -10,7 +10,7 @@ class HeuristicFunction_SA implements HeuristicFunction {
         // Calculo de dinerico
         double Benefits = b_state.computeBenefits();
 
-        // System.out.println("Heuristic Value = " + Benefits);
+        System.out.println("Heuristic Value = " + Benefits);
         return -1.0 * Benefits;
     }
 }
