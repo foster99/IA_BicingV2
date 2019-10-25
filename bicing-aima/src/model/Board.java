@@ -17,20 +17,20 @@ public class Board {
 
     public static void main(String[] args) {
 
-        int nest, nbic, f, dem, seed, init_sol, algorithm;
+        int nest, nbic, f, dem, seed, init_sol, algorithm, testing;
 
         if (args.length > 0) {
-
-            nest = Integer.parseInt(args[0]);
-            nbic = Integer.parseInt(args[1]);
-            f = Integer.parseInt(args[2]);
-            dem = Integer.parseInt(args[3]);
+            testing= Integer.parseInt(args[0]);
+            nest = Integer.parseInt(args[1]);
+            nbic = Integer.parseInt(args[2]);
+            f = Integer.parseInt(args[3]);
+            dem = Integer.parseInt(args[4]);
 
             Random random = new Random();
-            seed = Integer.parseInt(args[4]);
+            seed = Integer.parseInt(args[5]);
             if (seed == -1) seed = random.nextInt();
 
-            init_sol = Integer.parseInt(args[5]);
+            init_sol = Integer.parseInt(args[6]);
 
             BicingState initial_state = new BicingState(nest, nbic, dem, seed, f, init_sol);
 
@@ -41,15 +41,18 @@ public class Board {
             else if (init_sol == 2)
                 initial_state.initialSolution2();
 
-            algorithm = Integer.parseInt(args[6]);
+            algorithm = Integer.parseInt(args[7]);
             if (algorithm == 0)
-                Bicing_HillClimbing(initial_state);
+                Bicing_HillClimbing(initial_state,testing);
             else if (algorithm == 1)
-                Bicing_SimulatedAnnealing(initial_state, args);
+                Bicing_SimulatedAnnealing(initial_state, args,testing);
         }
 
         else {
             Scanner in = new Scanner(System.in);
+
+            System.out.println("TESTING????:");
+            testing=in.nextInt();
 
             System.out.println("Introduce el numero de Estaciones:");
             nest = in.nextInt();
@@ -92,14 +95,14 @@ public class Board {
                     "\t- Introduce (1) para utilizar SIMULATED ANNEALING.");
             algorithm = in.nextInt();
             if (algorithm == 0)
-                Bicing_HillClimbing(initial_state);
+                Bicing_HillClimbing(initial_state, testing);
             else if (algorithm == 1)
-                Bicing_SimulatedAnnealing(initial_state, null);
+                Bicing_SimulatedAnnealing(initial_state, null, testing);
         }
 
     }
 
-    private static void Bicing_HillClimbing(BicingState state) {
+    private static void Bicing_HillClimbing(BicingState state, int testing) {
         try {
 
             tick = System.currentTimeMillis();
@@ -109,16 +112,22 @@ public class Board {
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem, search);
 
-            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
-            System.out.print(search.getGoalState().toString());
-            System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToString());
+
+            if(testing == 1){
+                System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToStringTest());
+            }
+            else {
+                printActions(agent.getActions());
+                printInstrumentation(agent.getInstrumentation());
+                System.out.print(search.getGoalState().toString());
+                System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToString());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private static void Bicing_SimulatedAnnealing(BicingState state, String[] args) {
+    private static void Bicing_SimulatedAnnealing(BicingState state, String[] args, int testing) {
         try {
             Problem problem = new Problem(state, new SuccessorFunction_SA(), new GoalTest(), new HeuristicFunction_HC());
 
@@ -129,10 +138,10 @@ public class Board {
             double lamb = 0.001;
 
             if (args != null) { // Lectura de argumentos
-                steps = Integer.parseInt(args[7]);
-                stiter = Integer.parseInt(args[8]);
-                k = Integer.parseInt(args[9]);
-                lamb = Double.parseDouble(args[10]);
+                steps = Integer.parseInt(args[8]);
+                stiter = Integer.parseInt(args[9]);
+                k = Integer.parseInt(args[10]);
+                lamb = Double.parseDouble(args[11]);
             }
             else { // Lectura de consola
                 System.out.println("Parametros de Simulated Annealing:\n" +
@@ -161,8 +170,13 @@ public class Board {
             Search search = new SimulatedAnnealingSearch(steps, stiter, k, lamb);
             SearchAgent agent = new SearchAgent(problem, search);
 
-            System.out.print(search.getGoalState().toString());
-            System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToString());
+            if(testing == 1){
+                System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToStringTest());
+            }
+            else{
+                System.out.print(search.getGoalState().toString());
+                System.out.println("\n" + ((BicingState) search.getGoalState()).AsignacionBicisToString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

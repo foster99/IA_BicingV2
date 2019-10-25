@@ -150,6 +150,8 @@ public class BicingState {
 
         // en otras palabras, imprimir la solucion para que veamos que cojones ha encontrado
 
+
+
         boolean linux_tabs = true;
         long time = System.currentTimeMillis() - Board.tick;
 
@@ -172,6 +174,22 @@ public class BicingState {
         ret.append("\n- Beneficios:\t").append(this.computeBenefits()).append(" euros.\n");
         ret.append("- Distancia:\t").append(distancia_total).append(" km.\n");
         ret.append("- Tiempo: \t").append(time).append(" ms.\n");
+
+        return ret.toString();
+    }
+
+    public String AsignacionBicisToStringTest() {
+
+        long time = System.currentTimeMillis() - Board.tick;
+
+        StringBuilder ret = new StringBuilder();
+
+        double distancia_total = 0;
+        for (Furgoneta res : this.Furgos) {
+            distancia_total += res.totalDistance();
+        }
+
+        ret.append(this.computeBenefits()).append("\t").append(distancia_total).append("\t").append((int)this.getActive()).append("\t").append(time).append("\n");
 
         return ret.toString();
     }
