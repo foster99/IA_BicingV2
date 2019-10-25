@@ -36,6 +36,9 @@ public class Furgoneta {
     public boolean hasD2() {
         return  d2 != -1;
     }
+    public boolean usa2D() {
+        return hasOrigin() && hasD1() && hasD2() && qtt1 > 0 && qtt2 > 0;
+    }
     public boolean hasOrigin() { return origin != -1; }
 
     public double totalDistance() {

@@ -18,12 +18,12 @@ public class BicingState {
     private static TreeMap<Double,Integer> sorted_exceed;
     private static int max_furgo;
 
+    // Representacion del estado
     private Furgoneta[] Furgos;
 
-    public BicingState(Furgoneta[] NewFurgos) {
+    BicingState(Furgoneta[] NewFurgos) {
         Furgos = NewFurgos;
     }
-
     public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo, int init_sol) {
 
         Stations = new Estaciones(nest, nbic, demanda, seed);
@@ -64,52 +64,41 @@ public class BicingState {
     }
     public void initialSolution1() {
 
-        for (Pair origin : exceed_bicis) {
+        // USA, DE CADA ZONA DEL MAPA, LA ESTACION CON MAS BICICLETAS DISPONIBLES
+        boolean[] used = new boolean[exceed_bicis.size()];
+        boolean[] zones = new boolean[max_furgo];
 
-            double points = 0;
-            int[][] stats = new int[40][2];
-            for (Pair dem : demand_bicis) {
-                int rango = Board.distance(dem.first, origin.first)/1000;
-                stats[rango][0]++;
-                stats[rango][1] += dem.second;
+        int diff = 10000/max_furgo;
+        int f = 0, it = 0;
+
+        for (; it < exceed_bicis.size(); it++) {
+            int pos = Stations.get(exceed_bicis.get(it).first).getCoordY() / diff;
+            if (pos >= max_furgo) --pos;
+            if (!zones[pos]) {
+                Furgos[f++] = new Furgoneta(exceed_bicis.get(it).first, -1, -1, 0, 0);
+                zones[pos] = true;
+                used[it] = true;
             }
-            /*
-            for(Map.Entry<Integer,Integer> other_origin : exceed_bicis.entrySet()) {
-                if (origin == other_origin) continue;
-                points -= Board.distance()
-            }*/
-
-            for (int i = 0; i < stats.length; i++) {
-                int[] range_value = stats[i];
-                if (range_value[0] == 0) continue;
-                points += ((double) range_value[1] / (double) range_value[0])/ Math.log(i+0.5);
-            }
-
-            double value = 0.2;
-            sorted_exceed.put(value*points + (1-value)*points, origin.first);
-
-        }//25 1250 5 0 1234 1 0
-
-
-        int i=0, j = 0, sz = sorted_exceed.size(), aux = sz - max_furgo;
-
-        for(Map.Entry<Double,Integer> origin : sorted_exceed.entrySet()) {
-
-            if(max_furgo < sz) {
-                if (i >= aux) Furgos[j++] = new Furgoneta(origin.getValue(), -1, -1, 0, 0);
-            }
-            else Furgos[i]= new Furgoneta(origin.getValue(), -1,-1,0,0);
-            ++i;
         }
+
+        // si no hay una estacion en cada zona, rellena con las siguientes que mas furgos tengan, sin importar la zona
+        it = 0;
+        while (f < max_furgo) {
+            for (; it < exceed_bicis.size(); it++) if (!used[it]) break;
+            Furgos[f++] = new Furgoneta(exceed_bicis.get(it).first, -1, -1, 0, 0);
+            used[it] = true;
+        }
+
     }
     public void initialSolution2() {
         // ASIGNACION RANDOM
         Random rand = new Random();
         int origin;
-        boolean[] used = new boolean[max_furgo];
+        boolean[] used = new boolean[Stations.size()];
         for (int i = 0; i < max_furgo; i++) {
-            do origin = rand.nextInt(max_furgo); while(!used[origin]);
-            Furgos[i] = new Furgoneta(origin,-1,-1,0,0);
+            do origin = rand.nextInt(exceed_bicis.size()); while(used[exceed_bicis.get(origin).first]);
+            Furgos[i] = new Furgoneta(exceed_bicis.get(origin).first,-1,-1,0,0);
+            used[exceed_bicis.get(origin).first] = true;
         }
     }
 
@@ -137,7 +126,6 @@ public class BicingState {
 
         return Benefits;
     }
-
     public double getActive() {
 
         int active = 0;
@@ -146,7 +134,14 @@ public class BicingState {
         }
         return active;
     }
+    public double getDoubleDest() {
 
+        int active = 0;
+        for (Furgoneta furgo : Furgos) {
+            if (furgo.usa2D()) active++;
+        }
+        return active;
+    }
     public String AsignacionBicisToString() {
 
         // Hay que programar el printing de las asignaciones de las bicicletas.
@@ -182,8 +177,8 @@ public class BicingState {
     }
 
     // GETTERS
-    public Furgoneta[] getFurgos() { return Furgos; }
-    public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
+    Furgoneta[] getFurgos() { return Furgos; }
+    static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
     public static TreeMap<Double,Integer> getSorted_exceed() { return sorted_exceed;}
     public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() { return Stations; }

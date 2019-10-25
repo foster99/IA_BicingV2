@@ -13,4 +13,4 @@ public class HeuristicFunction_HC implements HeuristicFunction {
         // System.out.println("Heuristic Value = " + Benefits);
         return -1.0 * Benefits;
     }
-}//54.15 61.19
+}// 750 37500 150 0 1234 0 0

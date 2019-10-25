@@ -37,7 +37,6 @@ public class SuccessorFunction_SA implements SuccessorFunction {
                 retVal.add(new Successor(result1, succ1));
                 generated = true;
             }
-
             // fullD2
             else if (!OldFurgos[f].hasD2()) {
 
