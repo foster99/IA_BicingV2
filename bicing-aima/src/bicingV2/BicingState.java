@@ -62,14 +62,8 @@ public class BicingState {
     public void initialSolution0() {
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
-        int i = 0, j = 0, sz = exceed_bicis.size(), aux = sz - max_furgo;
-
-        for(Map.Entry<Double,Integer> entry : sorted_exceed.entrySet()) {
-
-            if(max_furgo < sz) {
-                if (--aux > 0) Furgos[j++] = new Furgoneta(entry.getValue(), -1, -1, 0, 0);
-            }
-            else Furgos[i++]= new Furgoneta(entry.getValue(), -1,-1,0,0);
+        for (int i = 0; i < max_furgo; i++) {
+            Furgos[i]= new Furgoneta(exceed_bicis.get(i).first, -1,-1,0,0);
         }
     }
     public void initialSolution1() {
