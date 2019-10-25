@@ -20,13 +20,14 @@ class Operator {
     }
     static String fullD2(Furgoneta F, int dest) {
         // Operador que a una furgoneta con origen definido, le asigna un D1 con todas las bicicletas posibles.
-        Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
+        if (F.full()) return null;
 
+        Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
         Estacion est = BicingState.getStations().get(F.origin);
-        int sobra_de_origen_y_d1 = Math.min(est.getNumBicicletasNext() - est.getDemanda(), est.getNumBicicletasNoUsadas()) - F.qtt1;
+        int sobras = Math.min(est.getNumBicicletasNext() - est.getDemanda(), est.getNumBicicletasNoUsadas()) - F.qtt1;
 
         F.d2 = destino.first;
-        F.qtt2 = Math.min(destino.second, sobra_de_origen_y_d1);
+        F.qtt2 = Math.min(destino.second, sobras);
 
         return "[fullD2]: Destino 2 asignado y lleno (lo maximo posible) en furgoneta.";
     }
