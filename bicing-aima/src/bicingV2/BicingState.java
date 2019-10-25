@@ -45,11 +45,8 @@ public class BicingState {
                 demand_bicis.add(P);
             }
             else {
-                int value = Math.min(next - dem, noused);
-                if (value > 0) {
-                    exceed_bicis.add(new Pair(i, value));
-                    if (init_sol == 0) sorted_exceed.put((double) value, i);
-                }
+                int value = Math.min(Math.min(next - dem, noused), 30);
+                if (value > 0) exceed_bicis.add(new Pair(i, value));
             }
 
         }
@@ -61,7 +58,6 @@ public class BicingState {
     // SOLUCIONES INICIALES
     public void initialSolution0() {
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
-
         for (int i = 0; i < max_furgo; i++) {
             Furgos[i]= new Furgoneta(exceed_bicis.get(i).first, -1,-1,0,0);
         }
@@ -77,7 +73,7 @@ public class BicingState {
                 stats[rango][0]++;
                 stats[rango][1] += dem.second;
             }
-/*
+            /*
             for(Map.Entry<Integer,Integer> other_origin : exceed_bicis.entrySet()) {
                 if (origin == other_origin) continue;
                 points -= Board.distance()
@@ -103,7 +99,6 @@ public class BicingState {
                 if (i >= aux) Furgos[j++] = new Furgoneta(origin.getValue(), -1, -1, 0, 0);
             }
             else Furgos[i]= new Furgoneta(origin.getValue(), -1,-1,0,0);
-
             ++i;
         }
     }
@@ -191,9 +186,7 @@ public class BicingState {
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
     public static TreeMap<Double,Integer> getSorted_exceed() { return sorted_exceed;}
     public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
-    public static Estaciones getStations() {
-        return Stations;
-    }
+    public static Estaciones getStations() { return Stations; }
     public static int getMax_furgo() {
         return max_furgo;
     }
