@@ -55,7 +55,7 @@ public class BicingState {
         }
         max_furgo = Math.min(num_furgo, exceed_bicis.size());
         Furgos = new Furgoneta[max_furgo];
-        Collections.sort(exceed_bicis, new Pair.SortBySecond());
+        exceed_bicis.sort(new Pair.SortBySecond()); // ordenar las estaciones por la cantidad de bicis que tienen
     }
 
     // SOLUCIONES INICIALES
