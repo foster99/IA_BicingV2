@@ -7,17 +7,14 @@ import model.Furgoneta;
 import model.Pair;
 
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.TreeMap;
-import java.util.Map;
+import java.util.*;
 
 public class BicingState {
 
     // Atributos estaticos del mapa del problema
     private static Estaciones Stations;
     private static ArrayList<Pair> demand_bicis;
-    private static TreeMap<Integer,Integer> exceed_bicis;
+    private static ArrayList<Pair> exceed_bicis;
     private static TreeMap<Double,Integer> sorted_exceed;
     private static int max_furgo;
 
@@ -29,11 +26,10 @@ public class BicingState {
 
     public BicingState(int nest, int nbic, int demanda, int seed, int num_furgo, int init_sol) {
 
-        max_furgo = num_furgo;
         Stations = new Estaciones(nest, nbic, demanda, seed);
 
         demand_bicis = new ArrayList<>();   // first -> id || second ->  bicis que faltan hasta la demanda
-        exceed_bicis = new TreeMap<>();
+        exceed_bicis = new ArrayList<>();
         sorted_exceed = new TreeMap<>();  // key -> disponible || value ->  origin index
 
         Pair P;
@@ -50,37 +46,40 @@ public class BicingState {
             }
             else {
                 int value = Math.min(next - dem, noused);
-                exceed_bicis.put(i, value);
-                if (init_sol == 0) sorted_exceed.put((double) value, i);
+                if (value > 0) {
+                    exceed_bicis.add(new Pair(i, value));
+                    if (init_sol == 0) sorted_exceed.put((double) value, i);
+                }
             }
 
         }
-        Furgos = new Furgoneta[Math.min(num_furgo, exceed_bicis.size())];
+        max_furgo = Math.min(num_furgo, exceed_bicis.size());
+        Furgos = new Furgoneta[max_furgo];
+        Collections.sort(exceed_bicis, new Pair.SortBySecond());
     }
 
     // SOLUCIONES INICIALES
-    public void initialSolution0(){
+    public void initialSolution0() {
         //USAR LAS ESTACIONES CON MAYOR NUMERO DE BICIS SOBRANTES
 
-        int i=0, j = 0, sz = sorted_exceed.size(), aux = sz - max_furgo;
+        int i = 0, j = 0, sz = exceed_bicis.size(), aux = sz - max_furgo;
 
         for(Map.Entry<Double,Integer> entry : sorted_exceed.entrySet()) {
 
             if(max_furgo < sz) {
-                if (i >= aux) Furgos[j++] = new Furgoneta(entry.getValue(), -1, -1, 0, 0);
+                if (--aux > 0) Furgos[j++] = new Furgoneta(entry.getValue(), -1, -1, 0, 0);
             }
-            else Furgos[i]= new Furgoneta(entry.getValue(), -1,-1,0,0);
-            ++i;
+            else Furgos[i++]= new Furgoneta(entry.getValue(), -1,-1,0,0);
         }
     }
     public void initialSolution1() {
 
-        for(Map.Entry<Integer,Integer> origin : exceed_bicis.entrySet()) {
+        for (Pair origin : exceed_bicis) {
 
             double points = 0;
             int[][] stats = new int[40][2];
             for (Pair dem : demand_bicis) {
-                int rango = Board.distance(dem.first, origin.getKey())/1000;
+                int rango = Board.distance(dem.first, origin.first)/1000;
                 stats[rango][0]++;
                 stats[rango][1] += dem.second;
             }
@@ -97,7 +96,7 @@ public class BicingState {
             }
 
             double value = 0.2;
-            sorted_exceed.put(value*points + (1-value)*points, origin.getKey());
+            sorted_exceed.put(value*points + (1-value)*points, origin.first);
 
         }//25 1250 5 0 1234 1 0
 
@@ -114,7 +113,6 @@ public class BicingState {
             ++i;
         }
     }
-
     public void initialSolution2() {
         // ASIGNACION RANDOM
         Random rand = new Random();
@@ -198,7 +196,7 @@ public class BicingState {
     public Furgoneta[] getFurgos() { return Furgos; }
     public static ArrayList<Pair> getDemand_Bicis() { return demand_bicis;}
     public static TreeMap<Double,Integer> getSorted_exceed() { return sorted_exceed;}
-    public static TreeMap<Integer,Integer> getExceed_Bicis() { return exceed_bicis;}
+    public static ArrayList<Pair> getExceed_Bicis() { return exceed_bicis;}
     public static Estaciones getStations() {
         return Stations;
     }

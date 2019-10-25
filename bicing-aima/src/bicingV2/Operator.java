@@ -1,5 +1,6 @@
 package bicingV2;
 
+import IA.Bicing.Estacion;
 import model.Furgoneta;
 import model.Pair;
 
@@ -9,8 +10,9 @@ class Operator {
         // Operador que a una furgoneta con origen definido, le asigna un D1 con todas las bicicletas posibles.
         Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
 
+        Estacion est = BicingState.getStations().get(F.origin);
         F.d1 = destino.first;
-        F.qtt1 = Math.min(destino.second, BicingState.getExceed_Bicis().get(F.origin));
+        F.qtt1 = Math.min(destino.second, Math.min(est.getNumBicicletasNext() - est.getDemanda(), est.getNumBicicletasNoUsadas()));
 
         return "[fullD1]: Destino 1 asignado y lleno en furgoneta.";
     }
@@ -18,8 +20,10 @@ class Operator {
         // Operador que a una furgoneta con origen definido, le asigna un D1 con todas las bicicletas posibles.
         Pair destino = BicingState.getDemand_Bicis().get(dest); // Indice sobre Stations de la Estacion destino y su demanda
 
+        Estacion est = BicingState.getStations().get(F.origin);
+
         F.d2 = destino.first;
-        F.qtt2 = BicingState.getExceed_Bicis().get(F.origin) - F.qtt1;
+        F.qtt2 = Math.min(destino.second, Math.min(est.getNumBicicletasNext() - est.getDemanda(), est.getNumBicicletasNoUsadas())) - F.qtt1;
 
         return "[fullD2]: Destino 2 asignado y lleno (lo maximo posible) en furgoneta.";
     }
