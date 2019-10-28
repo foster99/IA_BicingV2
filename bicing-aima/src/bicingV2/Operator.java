@@ -1,6 +1,7 @@
 package bicingV2;
 
 import IA.Bicing.Estacion;
+import model.Board;
 import model.Furgoneta;
 import model.Pair;
 
@@ -45,5 +46,31 @@ class Operator {
             return "[removeD2]: D2 eliminado.";
         }
         return "[removeD2]: --Qtt2 en furgoneta.";
+    }
+
+    static String changeOrigin(Furgoneta F, int index) {
+
+        Pair origin = BicingState.getExceed_Bicis().get(index);
+
+        F.origin = origin.first;
+        if (F.hasD2() && F.hasD1() && Board.distance(F.origin, F.d1) > Board.distance(F.origin, F.d2)) F.swap();
+
+        if (F.hasD1()) {
+            Estacion dem1 = BicingState.getStations().get(F.d1);
+            int demanda1 = dem1.getNumBicicletasNext() - dem1.getDemanda();
+            F.qtt1 = Math.min(demanda1, (Math.min(30, origin.second)));
+
+            if (F.hasD2()) {
+                Estacion dem2 = BicingState.getStations().get(F.d2);
+                int demanda2 = dem2.getNumBicicletasNext() - dem2.getDemanda();
+                F.qtt2 = Math.min(demanda1, (Math.min(30, origin.second) - F.qtt1));
+                if (F.qtt2 < 0) {
+                    F.qtt2 = 0;
+                    F.d2 = -1;
+                }
+            }
+        }
+
+        return "[ChangeOrigin]: Origen cambiado.";
     }
 }

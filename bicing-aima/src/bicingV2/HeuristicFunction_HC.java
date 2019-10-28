@@ -1,6 +1,7 @@
 package bicingV2;
 
 import aima.search.framework.HeuristicFunction;
+import model.Board;
 
 public class HeuristicFunction_HC implements HeuristicFunction {
     @Override

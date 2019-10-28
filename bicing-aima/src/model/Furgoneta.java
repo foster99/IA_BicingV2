@@ -40,7 +40,13 @@ public class Furgoneta {
         return hasOrigin() && hasD1() && hasD2() && qtt1 > 0 && qtt2 > 0;
     }
     public boolean hasOrigin() { return origin != -1; }
-
+    public void swap() {
+        int auxd = d1, auxq = qtt1;
+        d1 = d2;
+        qtt1 = qtt2;
+        d2 = auxd;
+        qtt2 = auxq;
+    }
     public double totalDistance() {
         if (!this.hasOrigin()) return 0;
         if (!this.hasD1()) {
@@ -51,7 +57,6 @@ public class Furgoneta {
             return Board.distance(origin, d1)/1000.0 + Board.distance(d1, d2)/1000.0;
         }
     }
-
     public double costeRecorrido() {
         if (!this.hasOrigin()) return 0;
         if (!this.hasD1()) {

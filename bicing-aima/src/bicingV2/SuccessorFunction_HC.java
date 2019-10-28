@@ -5,6 +5,7 @@ import aima.search.framework.SuccessorFunction;
 import model.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SuccessorFunction_HC implements SuccessorFunction {
 
@@ -59,6 +60,20 @@ public class SuccessorFunction_HC implements SuccessorFunction {
                 String result = Operator.removeD2(NewFurgos4[f]);
                 BicingState succ4 = new BicingState(NewFurgos4);
                 retVal.add(new Successor(result, succ4));
+            }
+            // changeOrigin
+            boolean[] used = new boolean[BicingState.getStations().size()];
+            for (Furgoneta F : OldFurgos) used[F.origin] = true;
+
+            for (int origin = 0; origin < BicingState.getExceed_Bicis().size(); origin++) {
+
+                if (used[BicingState.getExceed_Bicis().get(origin).first]) continue; // origenes asignados a otras furgonetas
+
+                Furgoneta[] NewFurgos5 = new Furgoneta[OldFurgos.length];
+                for (int i = 0; i < OldFurgos.length; i++) NewFurgos5[i] = OldFurgos[i].clone();
+                String result5 = Operator.changeOrigin(NewFurgos5[f], origin);
+                BicingState succ5 = new BicingState(NewFurgos5);
+                retVal.add(new Successor(result5, succ5));
             }
         }
 

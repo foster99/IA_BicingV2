@@ -10,7 +10,7 @@ import aima.search.informed.SimulatedAnnealingSearch;
 import bicingV2.*;
 
 import static java.lang.Math.abs;
-
+// 0 500 25000 100 0 -1 0 1 1 10000 10 5 0.001
 public class Board {
 
     public static long tick;
@@ -101,7 +101,7 @@ public class Board {
         }
 
     }
-
+// 0 500 25000 100 1 1234 0 0 1 1 10000 10 5 0.001
     private static void Bicing_HillClimbing(BicingState state, int testing) {
         try {
 
@@ -137,11 +137,11 @@ public class Board {
             int k = 5;
             double lamb = 0.001;
 
-            if (args != null) { // Lectura de argumentos
-                steps = Integer.parseInt(args[8]);
-                stiter = Integer.parseInt(args[9]);
-                k = Integer.parseInt(args[10]);
-                lamb = Double.parseDouble(args[11]);
+            if ((args != null) && (Integer.parseInt(args[8]) == 1)) { // Lectura de argumentos
+                steps = Integer.parseInt(args[9]);
+                stiter = Integer.parseInt(args[10]);
+                k = Integer.parseInt(args[11]);
+                lamb = Double.parseDouble(args[12]);
             }
             else { // Lectura de consola
                 System.out.println("Parametros de Simulated Annealing:\n" +
@@ -200,7 +200,6 @@ public class Board {
     private static int distance(int x1, int y1, int x2, int y2) {
         return abs(x1 - x2) + abs(y1 - y2);
     }
-
     public static int distance(int e1, int e2) {
         return distance(
                 BicingState.getStations().get(e1).getCoordX(),
