@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="bicing-aima:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/bicing_aima_jar</output-path>
+    <root id="archive" name="bicing-aima.jar">
+      <element id="module-output" name="bicing-aima" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/bicing-aima/lib/Bicing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/bicing-aima/lib/AIMA.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
