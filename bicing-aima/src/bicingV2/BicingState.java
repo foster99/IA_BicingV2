@@ -126,6 +126,21 @@ public class BicingState {
 
         return Benefits;
     }
+    double getTotalDistance() {
+        double distancia_total = 0;
+        for (Furgoneta res : this.Furgos) {
+            distancia_total += res.totalDistance();
+        }
+        return distancia_total;
+    }
+    double getOriginDistance() {
+        double distancia_total = 0;
+        for (Furgoneta ori1 : this.Furgos)
+            for (Furgoneta ori2 : Furgos)
+                distancia_total += Board.distance(ori1.origin, ori2.origin);
+
+        return distancia_total;
+    }
     public double getActive() {
 
         int active = 0;
@@ -142,6 +157,7 @@ public class BicingState {
         }
         return active;
     }
+
     public String AsignacionBicisToString() {
 
         // Hay que programar el printing de las asignaciones de las bicicletas.
@@ -166,13 +182,9 @@ public class BicingState {
             ++id;
         }
 
-        double distancia_total = 0;
-        for (Furgoneta res : this.Furgos) {
-            distancia_total += res.totalDistance();
-        }
 
         ret.append("\n- Beneficios:\t").append(this.computeBenefits()).append(" euros.\n");
-        ret.append("- Distancia:\t").append(distancia_total).append(" km.\n");
+        ret.append("- Distancia:\t").append(this.getTotalDistance()).append(" km.\n");
         ret.append("- Tiempo: \t").append(time).append(" ms.\n");
 
         return ret.toString();
@@ -184,12 +196,7 @@ public class BicingState {
 
         StringBuilder ret = new StringBuilder();
 
-        double distancia_total = 0;
-        for (Furgoneta res : this.Furgos) {
-            distancia_total += res.totalDistance();
-        }
-
-        ret.append(this.computeBenefits()).append("\t").append(distancia_total).append("\t").append((int)this.getActive()).append("\t").append(time).append("\n");
+        ret.append(this.computeBenefits()).append("\t").append(this.getTotalDistance()).append("\t").append((int)this.getActive()).append("\t").append(time);
 
         return ret.toString();
     }
